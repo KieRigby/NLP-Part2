@@ -9,9 +9,8 @@ from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS as sklearn_stop_w
 from numpy import array
 from numpy import asarray
 from numpy import zeros
-
-
-nltk.download('wordnet')
+from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS as sklearn_stop_words
+nltk_stop_words = nltk.corpus.stopwords.words('english')
 
 def clean_lyrics(lyrics):
     replace_with_space_regex = re.compile('[/(){}\[\]\|@,;]')
@@ -81,3 +80,8 @@ def preprocess_lyrics(data):
     lemmatised = [lemmatise(song) for song in no_stop_words]
     data['preprocessed_lyrics'] = lemmatised
     return data
+
+def remove_stopwords(lyrics):
+  words = lyrics.split()
+  non_stop_words = [word for word in words if not word in sklearn_stop_words]
+  return ' '.join(non_stop_words)

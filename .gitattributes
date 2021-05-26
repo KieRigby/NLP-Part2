@@ -1,2 +1,6 @@
 data/*.csv filter=lfs diff=lfs merge=lfs -text
+<<<<<<< HEAD
 utils/glove.6B.100d.txt filter=lfs diff=lfs merge=lfs -text
+=======
+glove.6B.100d.txt filter=lfs diff=lfs merge=lfs -text
+>>>>>>> api
