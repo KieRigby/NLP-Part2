@@ -7,15 +7,17 @@ from pydantic import BaseModel
 from typing import List
 import logging
 from helpers import async_iterator_wrapper as aiwrap
-from helpers import setup_logger, get_body
+from helpers import setup_logging, get_body
 app = FastAPI()
 
-logger = setup_logger(__name__)
+setup_logging()
+logger = logging.getLogger(__name__)
+
 @app.middleware("http")
 async def log_request(request: Request, call_next):
     logger.info(f'{request.method} {request.url}')
     req_body= await get_body(request)
-    logger.info(f'Response Body: {req_body}')
+    logger.info(f'Request Body: {req_body}')
 
     response = await call_next(request)
     logger.info(f'Status code: {response.status_code}')
@@ -45,26 +47,26 @@ def lyric_classifier(lyrics:Lyrics):
     # Making POST request
     response = requests.post(SERVER_URL, data=data)
     predictions=response.json()['predictions']
-    preds_labels=[]
+    classification_labels=[]
     for i,prediction in enumerate(predictions):
-        pred_labels=[]
+        classifications=[]
         if prediction[0] > 0.5:
-            pred_labels.append('alternative')
+            classifications.append('alternative')
         if prediction[1] > 0.5:
-            pred_labels.append('folk')
+            classifications.append('folk')
         if prediction[2] > 0.5:
-            pred_labels.append('negative')
+            classifications.append('negative')
         if prediction[3] > 0.5:
-            pred_labels.append('pop')
+            classifications.append('pop')
         if prediction[4] > 0.5:
-            pred_labels.append('postive')
+            classifications.append('postive')
         if prediction[5] > 0.5:
-            pred_labels.append('rap')
+            classifications.append('rap')
         if prediction[6] > 0.5:
-            pred_labels.append('rock')
+            classifications.append('rock')
 
-        preds_labels.append(pred_labels)
+        classification_labels.append(classifications)
 
-    return {'predictions': preds_labels}
+    return {'predictions': classification_labels}
 
     
