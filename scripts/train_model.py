@@ -55,7 +55,7 @@ def create_model():
 model = create_model()
 model.summary()
 
-history = model.fit(x_train, y_train, batch_size=128, epochs=1, verbose=1, validation_split=0.2)
+history = model.fit(x_train, y_train, batch_size=128, epochs=10, verbose=1, validation_split=0.2)
 
 model_path = Path('../models') / str(args.model_no)
 print(model_path)
