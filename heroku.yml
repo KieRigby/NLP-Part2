@@ -1,0 +1,6 @@
+build:
+  docker:
+    tf_serving: tfserving/Dockerfile
+    web: api/Dockerfile
+run:
+  web: bundle exec puma -C config/puma.rb
