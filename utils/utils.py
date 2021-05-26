@@ -5,6 +5,7 @@ import numpy as np
 from nltk.stem import WordNetLemmatizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
+from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS as sklearn_stop_words
 from numpy import array
 from numpy import asarray
 from numpy import zeros
@@ -31,6 +32,11 @@ def lemmatise(lyrics):
     stem_tokens = [lemmatizer.lemmatize(word) for word in words]
     return ' '.join(stem_tokens)
 
+def remove_stopwords(lyrics):
+  words = lyrics.split()
+  non_stop_words = [word for word in words if not word in sklearn_stop_words]
+  return ' '.join(non_stop_words)
+
 # Generates a tokenizer for a training and test data split and returns the tokenized data sets with the tokenizer
 def tokenize(x_train, x_test, maxlen=250, num_words=5000):
   tokenizer = Tokenizer(num_words)
@@ -48,7 +54,7 @@ def tokenize(x_train, x_test, maxlen=250, num_words=5000):
 def load_glove():
     embeddings_dictionary = dict()
 
-    glove_file = open('drive/MyDrive/UoS/Year 3/NLP/CW/Submission/glove.6B.100d.txt', encoding="utf8")
+    glove_file = open('../utils/glove.6B.100d.txt', encoding="utf8")
 
     for line in glove_file:
         records = line.split()
