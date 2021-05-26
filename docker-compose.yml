@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+
+  tf_serving:
+    image: tensorflow/serving:latest
+    environment:
+      MODEL_NAME: lyrics_model
+    volumes:
+      - './models:/models/lyrics_model'
+    ports:
+    - 8501:8501
+    networks:
+      - nlp_network  
+    # command: 
+    # - '--monitoring_config_file=/models/lyrics_model/monitoring_config.txt'
+    # - '--model_config_file=/models/lyrics_model/model_config_list'
+    container_name: tf_serving
+  
+  tfserving_api: 
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    volumes:
+      - './api/main.py:/app/main.py'
+      - './api/helpers.py:/app/helpers.py'
+    ports:
+    - 9090:9090
+    networks:
+      - nlp_network  
+    container_name: tfserving_api
+    command: bash -c "uvicorn main:app --host 0.0.0.0 --port 9090 --reload"
+
+  # tfserving_prometheus:
+  #   image: prom/prometheus:latest
+  #   volumes:
+  #     - './prometheus.yml:/etc/prometheus/prometheus.yml'
+  #   ports:
+  #   - 9090:9090
+  #   networks:
+  #     - nlp_network  
+  #   container_name: tfserving_prometheus
+
+networks:
+  nlp_network:
+    driver: bridge
