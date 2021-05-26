@@ -1,4 +1,5 @@
 import os, sys
+import argparse
 currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
@@ -14,6 +15,10 @@ from keras.layers.embeddings import Embedding
 from keras.layers import GlobalMaxPooling1D, MaxPooling1D
 from keras.layers import Conv1D
 from keras.layers import Dropout, Flatten
+
+parser = argparse.ArgumentParser(description='Train the model.')
+parser.add_argument('-n', '--model-no', required=True, help='a unique integer for the model version number')
+args = parser.parse_args()
 
 file_path = Path("../data/cleaned_dataset.csv")
 
@@ -50,4 +55,8 @@ def create_model():
 model = create_model()
 model.summary()
 
-history = model.fit(x_train, y_train, batch_size=128, epochs=10, verbose=1, validation_split=0.2)
+history = model.fit(x_train, y_train, batch_size=128, epochs=1, verbose=1, validation_split=0.2)
+
+model_path = Path('../models') / str(args.model_no)
+print(model_path)
+model.save(model_path)
