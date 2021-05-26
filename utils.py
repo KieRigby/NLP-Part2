@@ -75,3 +75,23 @@ def preprocess_lyrics(data):
     lemmatised = [lemmatise(song) for song in no_stop_words]
     data['preprocessed_lyrics'] = lemmatised
     return data
+
+
+# loads the data file given it's path
+def load_data(data_file):
+    data = pd.read_csv(data_file)
+    del data['Unnamed: 0']
+
+    data = fix_genre_formatting(data)
+    data = summarize_genres(data)
+    data = balance_genres(data)
+    
+    genre_list = data["genres"].tolist()
+    wrapped_genres = [[genre] for genre in genre_list]
+    genres_for_plot = [genre for genre in genre_list]
+    data["genres"] = wrapped_genres
+    data["genres_for_plot"] = genres_for_plot
+    
+    data = data.rename({'genres': 'tags'}, axis=1)
+
+    return data
