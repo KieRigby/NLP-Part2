@@ -1,10 +1,10 @@
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.7
 
-COPY ./api /app
+COPY ../api /app
 
 RUN mkdir /app/utils
 
-COPY ./utils /app/utils
+COPY ../utils /app/utils
 
 RUN pip install -r requirements.txt
 
